@@ -1,50 +1,21 @@
-from random import randrange
+symbol_hrace = 'o'
+symbol_pocitace = 'o' if symbol_hrace == 'x' else 'x'
 
-symbol_hrace = 'x'
-symbol_pocitace = 'o'
-
-def obrana(pole):
-    if pole.count('x-x'):
-        return(pole.index('x-x') + 1)
-    elif pole.count('-xx'):
-        return(pole.index('-xx'))   
-    elif pole.count('xx-'):
-        return(pole.index('xx-') + 2)
-    elif pole.count('x--x'):
-        return(pole.index('x--x') + 1)    
-    elif pole.count('-x-'):
-        return(pole.index('-x-'))
-    else:
-        return(-1)
+def strategie(pole):
+    patterns={'x':[('-oo', 0), ('oo-', 2), ('o-o', 1),
+                   ('x-x', 1), ('-xx', 0), ('xx-', 2), ('-x-', 0),
+                   ('-o-', 0), ('o--', 1), ('--o', 0), 
+                   ('---', 0), ('-', 0)],
+              'o':[('-xx', 0), ('xx-', 2), ('x-x', 1),
+                   ('o-o', 1), ('-oo', 0), ('oo-', 2), ('-o-', 0),
+                   ('-x-', 0), ('x--', 1), ('--x', 0), 
+                   ('---', 0), ('-', 0)]}
     
-def utok1(pole):
-    if pole.count('-oo'):
-        return(pole.index('-oo'))
-    elif pole.count('oo-'):
-        return(pole.index('oo-' + 2))
-    elif pole.count('o-o'):
-        return(pole.index('o-o')+1)
-    else:
-        return(-1)
-    
-def utok2(pole):
-    if pole.count('-o-'):
-        return(pole.index('-o-'))
-    elif pole.count('o--'):
-        return(pole.index('o--') + 1)
-    elif pole.count('--o'):
-        return(pole.index('--o'))
-    elif pole.count('---'):
-        return(pole.index('---') + 1)
-    else:
-        return(pole.index('-'))
+    for (combination, pozition) in patterns[symbol_hrace]:
+        if pole.count(combination):
+            return(pole.index(combination) + pozition)
         
             
-     
-    
-    
-    
-    
 def vyhodnot(pole):
     if 'xxx' in pole:
         return('x')
@@ -71,12 +42,7 @@ def tah_hrace(pole):
             return(tah(pole, cislo_policka, symbol_hrace))
         
 def tah_pocitace(pole):
-    "Vrati herni pole se zaznamenanym tahem pocitace"
-    cislo_policka = utok1(pole)
-    if cislo_policka == -1:
-        cislo_policka = obrana(pole)
-    if cislo_policka == -1:
-        cislo_policka = utok2(pole) 
+    cislo_policka = strategie(pole)
     return(tah(pole, cislo_policka, symbol_pocitace))
             
 
